@@ -17,12 +17,14 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+      - name: Install Airflow
         run: |
-          pip install "black[jupyter]" pathspec flake8 isort
           pip install apache-airflow --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.10.0/constraints-3.12.txt"
           pip install apache-airflow-providers-snowflake apache-airflow-providers-amazon
           pip install snowflake-connector-python boto3 requests
+
+      - name: Install linters
+        run: pip install "black>=24.0,<25.0" pathspec flake8 isort
 
       - name: Black format check
         run: black --check dags/ utils/ spark_jobs/
