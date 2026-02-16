@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.env
+airflow_settings.yaml
+airflow.db
+airflow.cfg
+webserver_config.py
+logs/
+.astro/
+.vscode/
+.cursor/
+.claude/

@@ -1,0 +1,46 @@
+name: Airflow CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  lint-and-compile:
+    name: Lint & Compile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install black flake8 isort
+          pip install apache-airflow --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.10.0/constraints-3.12.txt"
+          pip install apache-airflow-providers-snowflake apache-airflow-providers-amazon
+          pip install snowflake-connector-python boto3 requests
+
+      - name: Black format check
+        run: black --check dags/ utils/ spark_jobs/
+
+      - name: Isort check
+        run: isort --check --profile black dags/ utils/ spark_jobs/
+
+      - name: Flake8 lint
+        run: flake8 dags/ utils/ spark_jobs/ --max-line-length=120 --ignore=E501
+
+      - name: Python compile check
+        run: |
+          python -m py_compile dags/emr_batch_processing.py
+          python -m py_compile dags/snowflake_ingestion.py
+          python -m py_compile dags/dbt_orchestration.py
+          python -m py_compile dags/api_ingestion.py
+          python -m py_compile utils/aws_helpers.py
+          python -m py_compile utils/emr_helpers.py
+          python -m py_compile utils/snowflake_helpers.py
+          python -m py_compile utils/dbt_helpers.py
+          python -m py_compile spark_jobs/process_claims.py
