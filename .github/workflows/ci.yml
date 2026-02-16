@@ -19,7 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install black flake8 isort
+          pip install "black[jupyter]" pathspec flake8 isort
           pip install apache-airflow --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.10.0/constraints-3.12.txt"
           pip install apache-airflow-providers-snowflake apache-airflow-providers-amazon
           pip install snowflake-connector-python boto3 requests
