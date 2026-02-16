@@ -41,7 +41,10 @@ with DAG(
     @task
     def extract_from_api(**context):
         ds = context["ds"]
-        headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
+        headers = {
+            "Authorization": f"Bearer {API_KEY}",
+            "Content-Type": "application/json",
+        }
         endpoint = f"{API_BASE_URL}/claims"
         params = {"date": ds, "page_size": 1000}
 
@@ -50,7 +53,9 @@ with DAG(
 
         while True:
             params["page"] = page
-            response = requests.get(endpoint, headers=headers, params=params, timeout=60)
+            response = requests.get(
+                endpoint, headers=headers, params=params, timeout=60
+            )
             response.raise_for_status()
             data = response.json()
             records = data.get("results", [])

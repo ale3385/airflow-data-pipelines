@@ -74,9 +74,12 @@ with DAG(
         emr = session.client("emr-serverless")
 
         arguments = [
-            "--input-prefix", f"s3://{S3_BUCKET}/raw/{VENDOR}/{ds}/",
-            "--output-prefix", f"s3://{S3_BUCKET}/{OUTPUT_PREFIX}/{ds}/",
-            "--file-count", str(file_info["count"]),
+            "--input-prefix",
+            f"s3://{S3_BUCKET}/raw/{VENDOR}/{ds}/",
+            "--output-prefix",
+            f"s3://{S3_BUCKET}/{OUTPUT_PREFIX}/{ds}/",
+            "--file-count",
+            str(file_info["count"]),
         ]
 
         job_id = start_emr_job(emr, app_id, script_uri, arguments, VENDOR)

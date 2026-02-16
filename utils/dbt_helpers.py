@@ -9,7 +9,14 @@ DBT_PROFILES_DIR = "/usr/local/airflow/dbt_project/collect/profiles"
 
 def run_dbt_command(command, select=None, exclude=None, full_refresh=False):
     """Execute a dbt command and return the result."""
-    cmd = ["dbt", command, "--project-dir", DBT_PROJECT_DIR, "--profiles-dir", DBT_PROFILES_DIR]
+    cmd = [
+        "dbt",
+        command,
+        "--project-dir",
+        DBT_PROJECT_DIR,
+        "--profiles-dir",
+        DBT_PROFILES_DIR,
+    ]
 
     if select:
         cmd.extend(["--select", select])

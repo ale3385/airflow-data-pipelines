@@ -7,16 +7,18 @@ from pyspark.sql import functions as F
 from pyspark.sql.types import StructField, StructType, StringType, LongType, DateType
 
 
-SCHEMA = StructType([
-    StructField("claim_id", StringType(), False),
-    StructField("patient_id", StringType(), False),
-    StructField("provider_npi", StringType(), True),
-    StructField("claim_type", StringType(), True),
-    StructField("service_date", DateType(), True),
-    StructField("billed_amount_cents", LongType(), True),
-    StructField("diagnosis_codes", StringType(), True),
-    StructField("procedure_code", StringType(), True),
-])
+SCHEMA = StructType(
+    [
+        StructField("claim_id", StringType(), False),
+        StructField("patient_id", StringType(), False),
+        StructField("provider_npi", StringType(), True),
+        StructField("claim_type", StringType(), True),
+        StructField("service_date", DateType(), True),
+        StructField("billed_amount_cents", LongType(), True),
+        StructField("diagnosis_codes", StringType(), True),
+        StructField("procedure_code", StringType(), True),
+    ]
+)
 
 
 def parse_args():
@@ -31,8 +33,7 @@ def main():
     args = parse_args()
 
     spark = (
-        SparkSession.builder
-        .appName("claims-processing")
+        SparkSession.builder.appName("claims-processing")
         .config("spark.sql.adaptive.enabled", "true")
         .getOrCreate()
     )
@@ -52,11 +53,7 @@ def main():
 
     deduped = transformed.dropDuplicates(["claim_id"])
 
-    (
-        deduped.repartition(10)
-        .write.mode("overwrite")
-        .parquet(args.output_prefix)
-    )
+    (deduped.repartition(10).write.mode("overwrite").parquet(args.output_prefix))
 
     row_count = deduped.count()
     print(f"Processed {row_count} claims to {args.output_prefix}")
